@@ -18,8 +18,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ky.bpm.ImageProcessing;
+import com.example.ky.bpm.Model.RecordModel;
 import com.example.ky.bpm.R;
 import com.example.ky.bpm.comps.CircleProgressBar;
+import com.example.ky.bpm.comps.CommonFunctions;
+import com.example.ky.bpm.comps.DBHelper;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -27,6 +30,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MeasureFragment extends Fragment {
@@ -53,6 +60,7 @@ public class MeasureFragment extends Fragment {
     private static double beats = 0;
     private static long startTime = 0;
     private static float current_progress = 0;
+    private int current_recent_bpm = 0;
     public MeasureFragment() {}
     public static MeasureFragment _this;
     public static MeasureFragment newInstance() {
@@ -103,7 +111,6 @@ public class MeasureFragment extends Fragment {
         PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
         loadAVGRestActivityToManifest();
-
         return rootview;
     }
     public void setCurrentBeat(int beats){
@@ -123,17 +130,23 @@ public class MeasureFragment extends Fragment {
             saveAVGRestActivityToManifest();
         } catch(Exception e){}
     }
+
     public void saveAVGRestActivityToManifest(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("avgrest", Integer.valueOf(text.getText().toString()).intValue());
-        editor.putInt("avgactive", 0);
-        editor.commit();
+        DBHelper m_db = new DBHelper(getActivity().getApplicationContext());
+        String date_now = CommonFunctions.getStringFromDateTime(new Date(System.currentTimeMillis()));
+//        m_db.insertRecordIntoTable(date_now,current_recent_bpm);
+        if(current_recent_bpm > 0)
+            m_db.insertRecordIntoTable(date_now,current_recent_bpm);
     }
     public void loadAVGRestActivityToManifest(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        int value_rest = preferences.getInt("avgrest",0);
-        int value_activity = preferences.getInt("avgactive",0);
+        DBHelper m_db = new DBHelper(getActivity().getApplicationContext());
+        RecordModel m_md = m_db.getRecentData();
+        int value_rest = 0;
+        int value_activity = 0;
+        if(m_md.getBpm_history() != 0 && m_md.getDate_history() != "")
+        {
+            value_rest = m_md.getBpm_history();
+        }
         setAvgRestText(value_rest);
         setAvgActivityText(value_activity);
     }
@@ -202,7 +215,7 @@ public class MeasureFragment extends Fragment {
             }
             int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
             TYPE newType = currentType;
-            current_progress += 0.2;
+            current_progress += 1;
             if (imgAvg < rollingAverage) {
                 newType = TYPE.RED;
                 if (newType != currentType) {
@@ -220,9 +233,8 @@ public class MeasureFragment extends Fragment {
                 current_progress = 100;
             }
             _this.progressBar.setProgress(current_progress);
-
             long endTime = System.currentTimeMillis();
-            double totalTimeInSecs = (endTime - startTime) / 1000;////////////////here's pointlll Mr.Jakk
+            double totalTimeInSecs = (endTime - startTime) / 1000;
             if (totalTimeInSecs >= 1) {
                 double bps = (beats / totalTimeInSecs);
                 int dpm = (int) (bps * 60d);//
@@ -250,8 +262,10 @@ public class MeasureFragment extends Fragment {
                     }
                 }
                 int beatsAvg = (beatsArrayAvg / beatsArrayCnt);
-                if(current_progress >= 100)
+                if(current_progress >= 100) {
                     current_progress = 100;
+                    _this.current_recent_bpm = beatsAvg;
+                }
                     _this.setCurrentBeat(beatsAvg);
                     _this.addEntry(beatsAvg);
                     startTime = System.currentTimeMillis();

@@ -11,8 +11,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BpmMonitor">
-        </activity>
         <activity
             android:name=".MainScreenActivity"
             android:label="@string/title_activity_main_screen"

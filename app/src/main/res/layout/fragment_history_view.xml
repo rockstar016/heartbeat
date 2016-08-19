@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ky.bpm.Fragments.HistoryViewFragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:gravity="center"
+        android:background="@color/colorPrimaryDark"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toggle_group"
+            android:orientation="horizontal">
+            <ToggleButton
+                android:textOff="Day"
+                android:textOn="Day"
+                style="@style/custome_toggle_button"
+                android:layout_marginLeft="10dp"
+                android:checked="false"
+                android:id="@+id/toggle_day" />
+            <ToggleButton
+                android:textOff="Week"
+                android:textOn="Week"
+                style="@style/custome_toggle_button"
+                android:checked="false"
+                android:id="@+id/toggle_week" />
+            <ToggleButton
+                android:textOff="Month"
+                android:textOn="Month"
+                android:checked="false"
+                style="@style/custome_toggle_button"
+                android:id="@+id/toggle_month" />
+            <ToggleButton
+                android:textOff="Year"
+                android:textOn="Year"
+                style="@style/custome_toggle_button"
+                android:layout_marginRight="10dp"
+                android:checked="false"
+                android:id="@+id/toggle_year" />
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:background="@color/colorPrimaryDark">
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/view"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <ExpandableListView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/expandableListView" />
+
+</LinearLayout>
