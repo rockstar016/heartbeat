@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/design_fab_stroke_end_inner_color"
+    android:paddingLeft="30dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Aug 2016"
+        android:id="@+id/txt_date_header"
+        android:layout_gravity="center"
+        android:textSize="16sp"
+        android:textColor="#000" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Avg:"
+        android:id="@+id/textView6"
+        android:layout_gravity="center"
+        android:textColor="#000"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="520"
+        android:id="@+id/txt_avg_header"
+        android:layout_gravity="center"
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:layout_marginRight="5dp" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/img_header_indicator" />
+</LinearLayout>

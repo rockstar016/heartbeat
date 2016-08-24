@@ -6,6 +6,15 @@ package com.example.ky.bpm.Model;
 public class RecordModel {
     private String date_history;
     private int bpm_history;
+    private int week_no;
+
+    public int getWeek_no() {
+        return week_no;
+    }
+
+    public void setWeek_no(int week_no) {
+        this.week_no = week_no;
+    }
 
     public String getDate_history() {
         return date_history;

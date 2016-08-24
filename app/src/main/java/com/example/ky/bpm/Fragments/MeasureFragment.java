@@ -16,6 +16,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ky.bpm.ImageProcessing;
 import com.example.ky.bpm.Model.RecordModel;
@@ -33,6 +34,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -117,10 +119,9 @@ public class MeasureFragment extends Fragment {
         String value_disp = String.format("%03d",beats);
         text.setText(value_disp);
     }
-
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         try {
             wakeLock.release();
             camera.setPreviewCallback(null);
@@ -133,10 +134,18 @@ public class MeasureFragment extends Fragment {
 
     public void saveAVGRestActivityToManifest(){
         DBHelper m_db = new DBHelper(getActivity().getApplicationContext());
-        String date_now = CommonFunctions.getStringFromDateTime(new Date(System.currentTimeMillis()));
-//        m_db.insertRecordIntoTable(date_now,current_recent_bpm);
+        Date date = new Date(System.currentTimeMillis());
+        String date_now = CommonFunctions.getStringFromDateTime(date);
+        int week_no = getWeekNumberFromDate(date);
         if(current_recent_bpm > 0)
-            m_db.insertRecordIntoTable(date_now,current_recent_bpm);
+            m_db.insertRecordIntoTable(date_now,current_recent_bpm,week_no);
+    }
+    public int getWeekNumberFromDate(Date date){
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.YEAR,date.getYear());
+        now.set(Calendar.MONTH,date.getMonth());//0- january ..4-May
+        now.set(Calendar.DATE, date.getDate());
+        return now.get(Calendar.WEEK_OF_YEAR);
     }
     public void loadAVGRestActivityToManifest(){
         DBHelper m_db = new DBHelper(getActivity().getApplicationContext());
@@ -156,19 +165,7 @@ public class MeasureFragment extends Fragment {
     public void setAvgRestText(int value){
         text_avg_rest.setText(String.format("%02d",value));
     }
-    @Override
-    public void onPause() {
-        super.onPause();
-        try {
-            wakeLock.release();
-            camera.setPreviewCallback(null);
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-            saveAVGRestActivityToManifest();
-        }catch(Exception e){}
-    }
-    @Override
+   @Override
     public void onResume() {
         super.onResume();
         try {
@@ -215,7 +212,7 @@ public class MeasureFragment extends Fragment {
             }
             int rollingAverage = (averageArrayCnt > 0) ? (averageArrayAvg / averageArrayCnt) : 0;
             TYPE newType = currentType;
-            current_progress += 1;
+            current_progress += 0.5;
             if (imgAvg < rollingAverage) {
                 newType = TYPE.RED;
                 if (newType != currentType) {

@@ -55,7 +55,8 @@
 
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:layout_gravity="center_horizontal"
@@ -63,16 +64,59 @@
         android:layout_marginBottom="3dp"
         android:background="@color/colorPrimaryDark">
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/txt_max_bpm"
+                android:textColor="@color/max_min_color" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text\n\r00"
+                android:id="@+id/txt_avg_bpm"
+                android:textColor="@color/average_color"
+                android:maxLines="2"
+                android:minLines="2"
+                android:textAlignment="center" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/txt_min_bpm"
+                android:textColor="@color/max_min_color" />
+        </LinearLayout>
+
         <com.github.mikephil.charting.charts.BarChart
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/view"
+            android:id="@+id/barchart"
             android:layout_gravity="center" />
-    </FrameLayout>
+    </LinearLayout>
 
     <ExpandableListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/expandableListView" />
+        android:id="@+id/listview"
+        android:choiceMode="singleChoice"
+        android:headerDividersEnabled="true"
+        android:groupIndicator="@null" />
 
 </LinearLayout>
